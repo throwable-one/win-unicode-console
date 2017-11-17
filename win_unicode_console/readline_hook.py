@@ -47,11 +47,14 @@ def new_zero_terminated_string(b):
 	return p
 
 def check_encodings():
-	if sys.stdin.encoding != sys.stdout.encoding:
-		# raise RuntimeError("sys.stdin.encoding != sys.stdout.encoding, readline hook doesn't know, which one to use to decode prompt")
-		
-		warnings.warn("sys.stdin.encoding == {!r}, whereas sys.stdout.encoding == {!r}, readline hook consumer may assume they are the same".format(sys.stdin.encoding, sys.stdout.encoding), 
-			RuntimeWarning, stacklevel=3)
+	try:
+		if sys.stdin.encoding != sys.stdout.encoding:
+			# raise RuntimeError("sys.stdin.encoding != sys.stdout.encoding, readline hook doesn't know, which one to use to decode prompt")
+
+			warnings.warn("sys.stdin.encoding == {!r}, whereas sys.stdout.encoding == {!r}, readline hook consumer may assume they are the same".format(sys.stdin.encoding, sys.stdout.encoding),
+				RuntimeWarning, stacklevel=3)
+	except AttributeError:
+		warnings.warn("no 'encoding' field in stdin or stdout")
 
 def stdio_readline(prompt=""):
 	sys.stdout.write(prompt)
